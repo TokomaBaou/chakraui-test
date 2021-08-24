@@ -1,10 +1,25 @@
-import { memo, VFC } from "react";
+import { memo, useCallback, VFC } from "react";
 import { Flex, Heading, Link, Box, useDisclosure } from "@chakra-ui/react";
 
 import { MenuIconButton } from "../../atoms/button/MenuIconButton";
 import { MenuDrawer } from "../../molecules/MenuDrawer";
+import { useHistory } from "react-router-dom";
 
 export const Header: VFC = memo(() => {
+  const history = useHistory();
+
+  //menuのコンポーネントに渡したい
+  //不要な再レンダリングを失くすuseCallback
+  //useCallbackの中で使っている関数を依存配列に設定する or eslintでoffにする
+  const onClickHome = useCallback(() => history.push("/home"), [history]);
+  const onClickUserManagement = useCallback(
+    () => history.push("/home/user_management"),
+    [history]
+  );
+  const onClickSetting = useCallback(() => history.push("/home/setting"), [
+    history
+  ]);
+
   const { onOpen, onClose, isOpen } = useDisclosure();
   return (
     <>
@@ -18,7 +33,13 @@ export const Header: VFC = memo(() => {
         justify="space-between"
         padding={{ base: 3, md: 5 }}
       >
-        <Flex align="center" as="a" mr={8} _hover={{ cursor: "pointer" }}>
+        <Flex
+          align="center"
+          as="a"
+          mr={8}
+          _hover={{ cursor: "pointer" }}
+          onClick={onClickHome}
+        >
           <Heading as="h1" fontSize={{ base: "md", md: "lg" }}>
             ユーザー管理アプリ
           </Heading>
@@ -30,13 +51,19 @@ export const Header: VFC = memo(() => {
           display={{ base: "none", md: "flex" }}
         >
           <Box pr={4}>
-            <Link>ユーザー一覧</Link>
+            <Link onClick={onClickUserManagement}>ユーザー一覧</Link>
           </Box>
-          <Link>設定</Link>
+          <Link onClick={onClickSetting}>設定</Link>
         </Flex>
         <MenuIconButton onOpen={onOpen} />
       </Flex>
-      <MenuDrawer onClose={onClose} isOpen={isOpen} />
+      <MenuDrawer
+        onClose={onClose}
+        isOpen={isOpen}
+        onClickHome={onClickHome}
+        onClickUserManagement={onClickUserManagement}
+        onClickSetting={onClickSetting}
+      />
     </>
   );
 });
