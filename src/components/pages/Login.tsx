@@ -1,8 +1,20 @@
 import { Box, Flex, Heading, Divider, Input, Stack } from "@chakra-ui/react";
-import { memo, VFC } from "react";
+import { ChangeEvent, memo, useState, VFC } from "react";
 import { PrimaryButton } from "../atoms/button/PrimaryButton";
+import { useAuth } from "../hooks/useAuth";
 
 export const Login: VFC = memo(() => {
+  const { login, loading } = useAuth();
+
+  //入力した値を保持するstate
+  //typescriptで型を指定したいが、初期値が空の場合は、自動的にstringが設定される
+  const [userId, setUserId] = useState("");
+  //テキストボックスの型として覚える　:Change~
+  const onChangeUserId = (event: ChangeEvent<HTMLInputElement>) =>
+    setUserId(event.target.value);
+
+  const onClickLogin = () => login(userId);
+
   return (
     <Flex align="center" justify="center" height="100vh">
       <Box bg="white" w="sm" p={4} borderRadius="md" shadow="md">
@@ -11,8 +23,18 @@ export const Login: VFC = memo(() => {
         </Heading>
         <Divider my={4} />
         <Stack sapacing={6} py={4} px={10}>
-          <Input placeholder="ユーザーID" />
-          <PrimaryButton>ログイン</PrimaryButton>
+          <Input
+            placeholder="ユーザーID"
+            value={userId}
+            onChange={onChangeUserId}
+          />
+          <PrimaryButton
+            onClick={onClickLogin}
+            disabled={userId === ""}
+            loading={loading}
+          >
+            ログイン
+          </PrimaryButton>
         </Stack>
       </Box>
     </Flex>
