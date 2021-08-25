@@ -4,6 +4,7 @@ import { PrimaryButton } from "../atoms/button/PrimaryButton";
 import { useAuth } from "../hooks/useAuth";
 
 export const Login: VFC = memo(() => {
+  //axiosで返した値を受け取る
   const { login, loading } = useAuth();
 
   //入力した値を保持するstate
@@ -12,7 +13,7 @@ export const Login: VFC = memo(() => {
   //テキストボックスの型として覚える　:Change~
   const onChangeUserId = (event: ChangeEvent<HTMLInputElement>) =>
     setUserId(event.target.value);
-
+  //クリックした際にlogin関数にuserIdを渡す
   const onClickLogin = () => login(userId);
 
   return (
