@@ -7,11 +7,14 @@ import {
 } from "react";
 import { User } from "../../types/api/user";
 
+//追加した型をまとめる
+type LoginUser = User & { isAdmin: boolean };
+
 //useStateの更新関数　Dispatch,setStateAction
 export type LoginUserContextType = {
-  loginUser: User | null;
+  loginUser: LoginUser | null;
   //Contextで更新したい
-  setLoginUser: Dispatch<SetStateAction<User | null>>;
+  setLoginUser: Dispatch<SetStateAction<LoginUser | null>>;
 };
 //asで矯正認識させる
 export const LoginUserContext = createContext<LoginUserContextType>(
@@ -21,7 +24,7 @@ export const LoginUserContext = createContext<LoginUserContextType>(
 //Providerを書いていく
 export const LoginUserProvider = (props: { children: ReactNode }) => {
   const { children } = props;
-  const [loginUser, setLoginUser] = useState<User | null>(null);
+  const [loginUser, setLoginUser] = useState<LoginUser | null>(null);
   return (
     //再レンダリングの効率を目指すならproviderを分けることもある　Contextを分ける
     <LoginUserContext.Provider value={{ loginUser, setLoginUser }}>
